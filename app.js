@@ -8,9 +8,12 @@ if(config.image){
   let safeImage = config.image;
   if(safeImage.includes('drive.google.com/uc')) {
     const match = safeImage.match(/id=([^&]+)/);
-    if(match) safeImage = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+    if(match) safeImage = `https://lh3.googleusercontent.com/d/${match[1]}=w1000`;
   }
-  document.querySelector('#heroImage').style.backgroundImage=`url('${safeImage}')`;
+  const heroImage = document.querySelector('#heroImage');
+  heroImage.style.backgroundImage = `url('${safeImage}')`;
+  heroImage.style.backgroundSize = 'cover';
+  heroImage.style.backgroundPosition = 'center';
   document.head.insertAdjacentHTML('beforeend','<style>#heroImage:after{display:none}</style>');
 }
 document.querySelectorAll('.spin-button').forEach(button=>button.addEventListener('click',()=>spin(Number(button.dataset.spinButton))));

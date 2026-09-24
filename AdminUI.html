@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <style>
+    :root{--green:#244d43;--orange:#e6874b;--line:#e2e9e3;--muted:#718078;--bg:#f6f8f5}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px Arial,sans-serif;color:#27312e}
+    .wrap{max-width:900px;margin:0 auto;padding:32px 20px 60px}.top{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px}
+    h1{margin:0;color:var(--green);font-size:28px}h2{margin:0 0 5px;color:var(--green);font-size:18px}p{color:var(--muted);margin:5px 0 0}
+    .account{font-size:12px;color:var(--muted);text-align:right}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;margin:16px 0;box-shadow:0 3px 12px #244d4308}
+    .card-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}.number{background:#eaf2ed;color:var(--green);border-radius:10px;padding:9px 12px;font-weight:bold}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}label{display:block;font-weight:bold;margin:14px 0 6px}
+    input,textarea{width:100%;padding:12px;border:1px solid #ccd8ce;border-radius:8px;background:#fff;font:inherit}textarea{resize:vertical;min-height:130px;line-height:1.5}
+    .upload{border:2px dashed #b9cec0;border-radius:10px;padding:16px;background:#f8fbf8}.upload input{border:0;padding:0;margin-top:8px}.hint{font-size:12px;color:var(--muted);font-weight:normal}
+    .preview{display:none;max-width:300px;max-height:180px;margin-top:12px;border-radius:9px;object-fit:cover}.actions{display:flex;align-items:center;gap:16px;margin-top:20px}
+    button{padding:12px 20px;border:0;border-radius:8px;background:var(--orange);color:#fff;font-weight:bold;cursor:pointer}button:disabled{opacity:.6;cursor:wait}
+    .message{min-height:20px;margin:0;color:#347357}.message.error{color:#b33b32}
+    @media(max-width:650px){.wrap{padding:22px 14px 40px}.top{display:block}.account{text-align:left;margin-top:8px}.grid{display:block}.card{padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+  <header class="top"><div><h1>Castila Village</h1><p>Pengaturan landing page promo <span class="hint">v2-upload</span></p></div><div class="account">Sesi admin aktif<br><strong id="loading">Memuat data...</strong></div></header>
+  <form id="form">
+    <section class="card">
+      <div class="card-head"><span class="number">01</span><div><h2>Identitas & kontak</h2><p>Informasi yang tampil di bagian atas landing page.</p></div></div>
+      <div class="grid"><label>Nama perumahan<input id="name" required placeholder="Castila Village"></label><label>Lokasi<input id="location" required placeholder="Perak - Jombang"></label><label>Nomor WhatsApp admin<input id="phone" required placeholder="628123456789"></label></div>
+      <label class="upload">Gambar rumah di greeting <span class="hint">JPG, PNG, atau WEBP maksimal 5 MB</span><input id="image" type="file" accept="image/jpeg,image/png,image/webp"><img id="preview" class="preview" alt="Preview gambar rumah"></label>
+    </section>
+    <section class="card">
+      <div class="card-head"><span class="number">02</span><div><h2>Spin promo</h2><p>Satu promo per baris. Jumlahnya harus sesuai.</p></div></div>
+      <div class="grid"><label>Spin promo 1 <span class="hint">(tepat 5 pilihan)</span><textarea id="promos1" rows="5" required></textarea></label><label>Spin promo 2 <span class="hint">(tepat 6 pilihan)</span><textarea id="promos2" rows="6" required></textarea></label></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><span class="number">03</span><div><h2>Format chat WhatsApp</h2><p>Gunakan tag {nama}, {nomor}, {alamat}, {promo1}, dan {promo2}.</p></div></div>
+      <textarea id="chatTemplate" rows="6" required placeholder="Halo Admin, saya {nama}..."></textarea>
+      <div class="actions"><button type="submit">Simpan semua perubahan</button><p class="message" id="message"></p></div>
+    </section>
+  </form>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    function showMessage(text, error) {
+      $('message').textContent = text;
+      $('message').classList.toggle('error', Boolean(error));
+    }
+    function errorText(error) {
+      return error && error.message ? error.message : String(error || 'Kesalahan tidak diketahui');
+    }
+    function fill(config) {
+      $('name').value = config.name || '';
+      $('location').value = config.location || '';
+      $('phone').value = config.phone || '';
+      if (config.image) { $('preview').src = config.image; $('preview').style.display = 'block'; }
+      $('promos1').value = (config.promos1 || []).join('\n');
+      $('promos2').value = (config.promos2 || []).join('\n');
+      $('chatTemplate').value = config.chatTemplate || '';
+      $('loading').textContent = 'Data siap diedit';
+    }
+    google.script.run
+      .withSuccessHandler(fill)
+      .withFailureHandler(error => { $('loading').textContent = 'Gagal memuat'; showMessage(`Gagal memuat: ${errorText(error)}`, true); })
+      .readConfigForAdmin();
+    $('form').addEventListener('submit', event => {
+      event.preventDefault();
+      const promos1 = $('promos1').value.split('\n').map(x => x.trim()).filter(Boolean);
+      const promos2 = $('promos2').value.split('\n').map(x => x.trim()).filter(Boolean);
+      if (promos1.length !== 5 || promos2.length !== 6) {
+        showMessage('Jumlah promo harus tepat 5 dan 6 pilihan.', true);
+        return;
+      }
+      const button = $('form').querySelector('button[type="submit"]');
+      button.disabled = true;
+      showMessage('Menyimpan...');
+      const save = image => google.script.run
+        .withSuccessHandler(() => {
+          button.disabled = false;
+          showMessage('Tersimpan ke Spreadsheet ✓');
+          $('image').value = '';
+        })
+        .withFailureHandler(error => {
+          button.disabled = false;
+          showMessage(`Gagal menyimpan: ${errorText(error)}`, true);
+        })
+        .saveConfigForAdmin({
+          name: $('name').value.trim(),
+          location: $('location').value.trim(),
+          phone: $('phone').value.trim(),
+          promos1,
+          promos2,
+          chatTemplate: $('chatTemplate').value.trim(),
+          image
+        });
+      const file = $('image').files[0];
+      if (!file) { save($('preview').src || ''); return; }
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        button.disabled = false;
+        showMessage('Format gambar harus JPG, PNG, atau WEBP.', true);
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        button.disabled = false;
+        showMessage('Ukuran gambar maksimal 5 MB.', true);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onerror = () => {
+        button.disabled = false;
+        showMessage('Gagal membaca file gambar.', true);
+      };
+      reader.onload = () => google.script.run
+        .withSuccessHandler(save)
+        .withFailureHandler(error => {
+          button.disabled = false;
+          showMessage(`Upload gagal: ${errorText(error)}`, true);
+        })
+        .uploadImageForAdmin(reader.result, file.name);
+      reader.readAsDataURL(file);
+    });
+    $('image').addEventListener('change', () => {
+      const file = $('image').files[0];
+      if (!file) return;
+      $('preview').src = URL.createObjectURL(file);
+      $('preview').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

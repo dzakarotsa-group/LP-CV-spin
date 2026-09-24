@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dapatkan promo spesial Castila Village Perak - Jombang.">
+  <title>Castila Village | Promo Spesial</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <section class="hero" id="greeting">
+      <nav class="topbar">
+        <a class="brand" href="#greeting"><span class="brand-mark">CV</span><span id="brandName">Castila Village</span></a>
+      </nav>
+      <div class="hero-content">
+        <p class="eyebrow">Selamat datang di</p>
+        <h1 id="heroName">Castila Village</h1>
+        <p class="location"><span class="pin">⌖</span> <span id="heroLocation">Perak - Jombang</span></p>
+        <p class="hero-copy">Rumah impian untuk keluarga yang ingin tumbuh bersama. Putar keberuntunganmu dan bawa pulang promo terbaik hari ini.</p>
+        <a class="primary-button" href="#promo">Ambil Promo Sekarang <span>↓</span></a>
+      </div>
+      <div class="hero-image" id="heroImage" role="img" aria-label="Gambar rumah Castila Village"></div>
+      <div class="hero-glow"></div>
+    </section>
+
+    <section class="section promo-section" id="promo">
+      <div class="section-heading">
+        <p class="eyebrow">Kesempatan spesial</p>
+        <h2>Putar & dapatkan <em>promo terbaikmu</em></h2>
+        <p class="muted">Setiap putaran punya kejutan berbeda. Yuk, coba keberuntunganmu!</p>
+      </div>
+      <div class="spin-grid">
+        <article class="spin-card" data-spin="1">
+          <div class="card-number">01</div>
+          <p class="card-kicker">Spin promo 1</p>
+          <h3>Bonus untuk rumah impian</h3>
+          <div class="wheel-wrap">
+            <div class="wheel" id="wheel1"><div class="wheel-center">PUTAR</div></div>
+            <span class="wheel-pointer">▼</span>
+          </div>
+          <button class="secondary-button spin-button" data-spin-button="1">Putar sekarang</button>
+          <p class="result-text" id="result1">Belum ada promo terpilih</p>
+        </article>
+        <article class="spin-card accent-card" data-spin="2">
+          <div class="card-number">02</div>
+          <p class="card-kicker">Spin promo 2</p>
+          <h3>Hadiah ekstra untukmu</h3>
+          <div class="wheel-wrap">
+            <div class="wheel" id="wheel2"><div class="wheel-center">PUTAR</div></div>
+            <span class="wheel-pointer">▼</span>
+          </div>
+          <button class="secondary-button spin-button" data-spin-button="2">Putar sekarang</button>
+          <p class="result-text" id="result2">Belum ada promo terpilih</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section form-section" id="ambil-promo">
+      <div class="form-intro">
+        <p class="eyebrow">Langkah terakhir</p>
+        <h2>Untuk ambil promo,<br><em>isi data berikut</em></h2>
+        <p class="muted">Setelah data lengkap, kamu akan langsung terhubung ke WhatsApp admin untuk melanjutkan promo.</p>
+        <div class="trust-list">
+          <span>✓ Promo resmi Castila Village</span>
+          <span>✓ Data aman dan tidak disebarluaskan</span>
+          <span>✓ Respon cepat dari admin</span>
+        </div>
+      </div>
+      <form class="lead-form" id="leadForm">
+        <div class="selected-promos">
+          <span class="selected-label">Promo pilihanmu</span>
+          <div><span id="selected1">Putar Spin Promo 1</span><span id="selected2">Putar Spin Promo 2</span></div>
+        </div>
+        <label for="name">Nama lengkap <span>*</span></label>
+        <input id="name" name="name" type="text" placeholder="Contoh: Budi Santoso" required>
+        <label for="phone">Nomor WhatsApp <span>*</span></label>
+        <input id="phone" name="phone" type="tel" inputmode="numeric" placeholder="Contoh: 081234567890" required>
+        <label for="address">Alamat domisili <span>*</span></label>
+        <textarea id="address" name="address" rows="3" placeholder="Kecamatan / kota domisili kamu" required></textarea>
+        <button class="primary-button full-width" type="submit">Lanjut ke WhatsApp Admin <span>↗</span></button>
+        <p class="form-note">Dengan melanjutkan, kamu menyetujui data dihubungi oleh tim Castila Village terkait promo.</p>
+        <p class="form-message" id="formMessage" role="alert"></p>
+      </form>
+    </section>
+  </main>
+  <footer><span>© 2025 Castila Village</span><span>Perak - Jombang</span></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

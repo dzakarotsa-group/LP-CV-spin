@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Castila Village</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <a class="brand" href="index.html"><span class="brand-mark">CV</span><span>Castila Village</span></a>
+  </header>
+  <main class="admin-main">
+    <div class="admin-title"><p class="eyebrow">Control center</p><h1>Pengaturan landing page</h1><p class="muted">Kelola promo, kontak, dan leads dari satu tempat.</p><button class="admin-link" id="logout" type="button">Keluar</button></div>
+    <section class="admin-panel login-panel" id="loginPanel"><h2>Dashboard admin aman</h2><p class="muted">Dashboard admin sekarang memakai login akun Google melalui URL Web App Google Apps Script. Buka URL deployment Admin yang diberikan saat setup.</p></section>
+    <div class="admin-tabs" id="adminContent"><button class="tab active" data-tab="settings">Pengaturan</button><button class="tab" data-tab="leads">Data leads <span id="leadCount">0</span></button></div>
+    <section class="admin-panel tab-content active" id="settings">
+      <form id="settingsForm">
+        <div class="admin-block"><div class="block-heading"><span class="block-icon">✦</span><div><h2>Identitas & kontak</h2><p>Informasi utama yang muncul di landing page.</p></div></div>
+          <div class="field-grid"><label>Nama perumahan<input id="settingName" required></label><label>Lokasi<input id="settingLocation" required></label><label>Nomor WhatsApp admin<input id="settingPhone" type="tel" required placeholder="628123456789"></label></div>
+          <label class="upload-field">Gambar rumah greeting<input id="imageUpload" type="file" accept="image/*"><span class="upload-box">＋ Pilih gambar rumah <small>JPG, PNG maksimal 2 MB</small></span></label>
+          <div class="image-preview" id="imagePreview"></div>
+        </div>
+        <div class="admin-block"><div class="block-heading"><span class="block-icon">01</span><div><h2>Spin promo 1</h2><p>Tambahkan 5 pilihan promo. Satu pilihan per baris.</p></div></div><textarea id="promos1" rows="5" required></textarea></div>
+        <div class="admin-block"><div class="block-heading"><span class="block-icon">02</span><div><h2>Spin promo 2</h2><p>Tambahkan 6 pilihan promo. Satu pilihan per baris.</p></div></div><textarea id="promos2" rows="6" required></textarea></div>
+        <div class="admin-block"><div class="block-heading"><span class="block-icon">✉</span><div><h2>Format chat WhatsApp</h2><p>Gunakan tag berikut: <code>{nama}</code>, <code>{nomor}</code>, <code>{alamat}</code>, <code>{promo1}</code>, <code>{promo2}</code>.</p></div></div><textarea id="chatTemplate" rows="7" required></textarea></div>
+        <div class="save-row"><p class="save-status" id="saveStatus"></p><button class="primary-button" type="submit">Simpan perubahan</button></div>
+      </form>
+    </section>
+    <section class="admin-panel tab-content" id="leads">
+      <div class="leads-heading"><div><h2>Data leads masuk</h2><p class="muted">Data tersimpan terpusat di sheet Leads.</p></div><button class="secondary-button" id="exportCsv">Buka Spreadsheet</button></div>
+      <div class="table-wrap"><table><thead><tr><th>Waktu</th><th>Nama</th><th>WhatsApp</th><th>Domisili</th><th>Promo</th></tr></thead><tbody id="leadsBody"></tbody></table><div class="empty-state" id="emptyLeads">Belum ada data leads.</div></div>
+    </section>
+  </main>
+</body>
+</html>

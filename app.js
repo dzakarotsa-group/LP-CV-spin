@@ -1,8 +1,18 @@
 const DEFAULT_CONFIG={name:'Castila Village',location:'Perak - Jombang',phone:'628123456789',promos1:['Gratis biaya akad','DP ringan mulai 5%','Gratis kanopi rumah','Cashback Rp5 juta','Voucher furniture'],promos2:['Free biaya KPR','Gratis pagar rumah','Bonus kitchen set','Gratis AJB & SHM','Subsidi angsuran 3 bulan','Voucher pindahan'],chatTemplate:'Halo Admin Castila Village, saya {nama} ({nomor}) dari {alamat}. Saya mau ambil promo {promo1} dan {promo2} yang saya dapat dari spin promo. Mohon info selanjutnya ya.'};
-const API_URL='https://script.google.com/macros/s/AKfycbz0GaeSoGY6H-OPE5fI0xG8LXqak4v2MlyoQzEymsyyb_EuiBbIKhy7AaMFs1cKMNo9bQ/exec';const localConfig=()=>{try{return {...DEFAULT_CONFIG,...JSON.parse(localStorage.getItem('castilaConfig')||'{}')}}catch(error){return DEFAULT_CONFIG}};
+const API_URL='https://script.google.com/macros/s/AKfycbz0GaeSoGY6H-OPE5fI0xG8LXqak4v2MlyoQzEymsyyb_EuiBbIKhy7AaMFs1cKMNo9bQ/exec';
+const localConfig=()=>{try{return {...DEFAULT_CONFIG,...JSON.parse(localStorage.getItem('castilaConfig')||'{}')}}catch(error){return DEFAULT_CONFIG}};
 const loadRemoteConfig=url=>new Promise(resolve=>{if(!url||url.includes('GANTI_URL'))return resolve(localConfig());const callback=`castilaConfig_${Date.now()}`;window[callback]=data=>{delete window[callback];script.remove();resolve(data.ok?{...DEFAULT_CONFIG,...data.config}:localConfig())};const script=document.createElement('script');script.src=`${url}?action=config&callback=${callback}`;script.onerror=()=>{delete window[callback];script.remove();resolve(localConfig())};document.head.appendChild(script)});
 const apiUrl=localStorage.getItem('castilaApiUrl')||API_URL;const config=await loadRemoteConfig(apiUrl);let selected={1:null,2:null};const promoLists={1:config.promos1,2:config.promos2};
-document.querySelector('#brandName').textContent=config.name;document.querySelector('#heroName').textContent=config.name;document.querySelector('#heroLocation').textContent=config.location;if(config.image){document.querySelector('#heroImage').style.backgroundImage=`url(${config.image})`;document.head.insertAdjacentHTML('beforeend','<style>#heroImage:after{display:none}</style>');}
+document.querySelector('#brandName').textContent=config.name;document.querySelector('#heroName').textContent=config.name;document.querySelector('#heroLocation').textContent=config.location;
+if(config.image){
+  let safeImage = config.image;
+  if(safeImage.includes('drive.google.com/uc')) {
+    const match = safeImage.match(/id=([^&]+)/);
+    if(match) safeImage = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+  }
+  document.querySelector('#heroImage').style.backgroundImage=`url('${safeImage}')`;
+  document.head.insertAdjacentHTML('beforeend','<style>#heroImage:after{display:none}</style>');
+}
 document.querySelectorAll('.spin-button').forEach(button=>button.addEventListener('click',()=>spin(Number(button.dataset.spinButton))));
 function drawWheelText(number){const list=promoLists[number]||[];if(list.length<2)return;const wheel=document.querySelector(`#wheel${number}`);let container=document.createElement('div');container.className='wheel-text-container';const angle=360/list.length;const colors=number===1?['#efaa70','#769b89','#d9e5da','#d98255','#527b6c']:['#ed9b63','#769b89','#d9e5da','#d98255','#527b6c','#e8bd7b'];let stops=[];let pct=100/list.length;for(let i=0;i<list.length;i++){let color=colors[i%colors.length];if(i===list.length-1&&color===colors[0])color=colors[(i+1)%colors.length]||'#e8bd7b';stops.push(`${color} ${i*pct}% ${(i+1)*pct}%`)}wheel.style.background=`conic-gradient(${stops.join(', ')})`;list.forEach((promo,i)=>{const el=document.createElement('div');el.className='wheel-text';el.style.transform=`rotate(${i*angle+(angle/2)}deg)`;el.innerHTML=`<span>${promo}</span>`;container.appendChild(el)});wheel.insertBefore(container,wheel.querySelector('.wheel-center'))}
 drawWheelText(1);drawWheelText(2);

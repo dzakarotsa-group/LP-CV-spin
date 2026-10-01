@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Castila Village</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <a class="brand" href="index.html"><span class="brand-mark">CV</span><span>Castila Village</span></a>
+  </header>
+  <main class="admin-main">
+    <div class="admin-title">
+      <p class="eyebrow">Control center</p>
+      <h1>Dashboard admin</h1>
+      <p class="muted">Pengaturan disimpan terpusat di Google Spreadsheet Castila Village.</p>
+    </div>
+    <section class="admin-panel">
+      <h2>Hubungkan dashboard Google Apps Script</h2>
+      <p class="muted">Masukkan URL deployment Admin dari Apps Script. URL dashboard akan disimpan di browser ini.</p>
+      <form id="adminUrlForm">
+        <label for="adminUrl">URL deployment Admin</label>
+        <input id="adminUrl" type="url" autocomplete="url" placeholder="https://script.google.com/macros/s/.../exec" required>
+        <button class="primary-button" type="submit">Simpan & buka dashboard</button>
+        <p class="form-message" id="adminUrlMessage" role="alert"></p>
+      </form>
+      <p class="muted"><a href="SETUP-GOOGLE.md">Lihat panduan setup Google Apps Script</a></p>
+    </section>
+  </main>
+  <script type="module" src="admin.js?v=20261001-3"></script>
+</body>
+</html>
